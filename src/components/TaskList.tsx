@@ -13,17 +13,38 @@ interface Task {
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
-
+  console.log(tasks);
   function handleCreateNewTask() {
-    // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-  }
+        if(!newTaskTitle) return;
+
+     const newTask = [...tasks];
+     newTask.push({id:tasks.length+1,title:newTaskTitle,isComplete:false})
+    setTasks(newTask);
+ }
 
   function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    const TaskCompletion =[...tasks];
+    tasks.forEach((element,index) => {
+      if(element.id===id){
+          
+          if(TaskCompletion[index].isComplete){
+            TaskCompletion[index].isComplete=false;
+          }else
+          TaskCompletion[index].isComplete=true;
+      }
+    });
+  setTasks(TaskCompletion);
+    
   }
 
   function handleRemoveTask(id: number) {
-    // Remova uma task da listagem pelo ID
+    let RemoveTask =[...tasks];
+    tasks.map((element,index) => {
+      if(element.id===id){
+        RemoveTask.splice(index,1);
+      }
+    });
+  setTasks(RemoveTask);
   }
 
   return (
@@ -58,7 +79,7 @@ export function TaskList() {
                   />
                   <span className="checkmark"></span>
                 </label>
-                <p>{task.title}</p>
+                <p>{task.title??'Default'}</p>
               </div>
 
               <button type="button" data-testid="remove-task-button" onClick={() => handleRemoveTask(task.id)}>
